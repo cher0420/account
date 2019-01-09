@@ -1,0 +1,28 @@
+.header{
+    background-color: #242f42;
+}
+.login-wrap{
+    /*background: #324157;*/
+}
+.plugins-tips{
+    background: #eef1f6;
+}
+.plugins-tips a{
+    color: #2a8ce7;
+}
+.el-upload--text em {
+    color: #2a8ce7;
+}
+.pure-button{
+    background:#2a8ce7;
+}
+.tags-li.active {
+    border: 1px solid  #2a8ce7;
+    background-color: #2a8ce7;
+}
+.message-title{
+    color: #2a8ce7;
+}
+.collapse-btn:hover{
+    background: rgb(40,52,70);
+}

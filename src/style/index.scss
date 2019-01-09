@@ -1,0 +1,193 @@
+//命名空间： yoy
+//var
+$primary-color: #2a8ce7;
+$nav-b-color:#3b516f;
+$nav-height:60px;
+$fff:#fff;
+$danger: #f04b4b;
+$light-blue: #eaf6fe;
+$disabled: #c3c3c3;
+//二级菜单
+$second-side: #eaedf1;  //背景色
+$second-side-hover: #f5f6f8;
+$second-f-c:#555;//菜单默认颜色（标题）
+$second-f-w:500; //菜单字体粗细
+$second-f-c-l:#777; //子菜单字体颜色
+$second-f-c-hover:#000; //鼠标划过时字体颜色
+
+
+$iconW:28px;
+$iconH:28px;
+
+$side-font-act-color:#ffffff;
+$side-font-color: #cfd9e2;
+$side-background:#324054;
+$side-transition:#2a3549;
+$side-item:#324054;
+$side-hover:#475365;
+$side-item-height:48px;
+$side-icon-height:28px;
+$side-item-padding:14px;
+$side-bar-width:60px;
+$side-width:240px;
+
+$f-pri-c: #555;
+
+//layout
+#app{
+  height:100%;
+}
+.dis-i-b{
+  display: inline-block;
+}
+.p-relative{
+  position:relative;
+}
+.p-absolute{
+  position:absolute;
+}
+.left-0{
+  left:0;
+}
+.right-0{
+  right: 0;
+}
+//font-size
+.f-s-0{
+  font-size:0;
+}
+.f-s-11{
+  font-size:11px;
+}
+.f-s-24{
+  font-size:24px;
+}
+.f-s-12{
+  font-size: 12px;
+}
+.f-s-13{
+  font-size: 13px;
+}
+.f-s-14{
+  font-size: 14px;
+}
+.f-s-15{
+  font-size: 15px;
+}
+.f-s-16{
+  font-size: 16px;
+}
+.f-s-20{
+  font-size: 20px;
+}
+.f-s-22{
+  font-size: 22px;
+}
+
+//font-weight
+.f-w-500{
+  font-weight: 500;
+}
+//height
+.full-height{
+  height:100%;
+}
+
+//width
+.full-width{
+  width:100%;
+}
+
+//color
+.font-primary{
+  color: $f-pri-c;
+}
+.nav-b-color{
+  background: $nav-b-color;
+}
+.side-font-color{
+  color:$side-font-color;
+}
+.text-a-c{
+  text-align: center;
+}
+.text-a-l{
+  text-align: left;
+}
+.primary-color{
+  color: $primary-color;
+}
+.danger-color{
+  color: $danger;
+}
+.c-fff{
+  color:#fff;
+}
+.c333{
+  color:#333;
+}
+.c555{
+  color: #555;
+}
+.c777{
+  color: #777;
+}
+.c999{
+  color: #999;
+}
+
+// example
+.text-title{
+  color: $f-pri-c;
+  font-size: 24px;
+}
+
+//config
+.box-sizing{
+  box-sizing:border-box;
+}
+//border
+$border-color:#eaedf1;
+.border-bottom{
+  border-bottom: 1px solid $border-color;
+}
+.borderAround{
+  border:1px solid $border-color;
+}
+//disabled
+.disabled{
+  color:#c0c4cc;
+  cursor: default !important;
+}
+.yoy-second-menu .el-menu-item.is-disabled{
+  cursor: default !important;
+}
+.el-input.is-disabled .el-input__inner{
+  cursor: default !important;
+}
+
+/*
+search button
+ */
+.yoy-search-button{
+  width: 32px!important;
+  height:30px!important;
+  line-height: 30px!important;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 1px;
+  background-color: $light-blue;
+  cursor:pointer;
+  box-sizing: border-box;
+}
+.el-icon-search:before {
+  font-weight: 900;
+  font-size: 14px;
+  color: $primary-color;
+}
+.searchInput{
+  width: 360px;
+  overflow: hidden;
+  position: relative;
+}
