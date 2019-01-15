@@ -7,7 +7,7 @@ export default new Router({
     routes: [
         {
             path: "/",
-            redirect: "/register"
+            redirect: "/login"
         },
         {
             path: "/login",
@@ -18,7 +18,21 @@ export default new Router({
             component: resolve =>
                 require(["../components/page/register.vue"], resolve)
         },
+        {
+            path: "/serviceProtocol",
+            component: resolve =>
+                require(["../components/page/serviceAgreement.vue"], resolve)
+        },
+        {
+            path: "/privacyStatement",
+            component: resolve =>
+                require(["../components/page/privacyStatement.vue"], resolve)
+        },
+        {
+            path: '*',
+            name: 'Error',
+            redirect: "/"
+        }
 
     ],
-    mode: 'history'
 });

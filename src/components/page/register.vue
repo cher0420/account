@@ -240,6 +240,9 @@
 
             }
         },
+        beforeCreate(){
+            document.title = '嗨聊平台-注册'
+        },
         created() {
 
         },
@@ -289,25 +292,49 @@
                 let redirecturls = this.GetRequest();
                 let ssoUrl = ''
                 if (redirecturls != undefined) {
-                    ssoUrl = host.SSOWebUrl.zh + "?redirecturl=" + redirecturls;
+                    that.$router.push({
+                        path:'/login',
+                        query:{
+                            redirecturl:redirecturls
+                        }
+                    })
+                    // ssoUrl = host.SSOWebUrl.zh + "?redirecturl=" + redirecturls;
                 } else {
-                    ssoUrl = host.SSOWebUrl.zh;
+                    this.$router.push({
+                        path:'/login'
+                    })
+                    // ssoUrl = host.SSOWebUrl.zh;
                 }
-
-
-                window.location.href = ssoUrl
+                // this.$router.push({
+                //     path:'/login'
+                // })
+                // window.location.href = ssoUrl
             },
             blankLoginIn() {
                 let that = this;
                 let redirecturls = this.GetRequest();
                 if (redirecturls == undefined) {
                     const Account = that.ruleForm.username + "@" + that.ruleForm.domain + ".hightalk.online";
-                    window.location.href = host.SSOWebUrl.zh + '?username=' + Account
+                    // window.location.href = host.SSOWebUrl.zh + '?username=' + Account
+                    that.$router.push({
+                        path:'/login',
+                        query:{
+                            username:Account,
+                            redirecturl:redirecturls
+                        }
+                    })
                 } else {
                     const Account = that.ruleForm.username + "@" + that.ruleForm.domain + ".hightalk.online";
-                    window.location.href = host.SSOWebUrl.zh + '?username=' + Account + '&redirecturl=' + redirecturls;
+                    // window.location.href = host.SSOWebUrl.zh + '?username=' + Account + '&redirecturl=' + redirecturls;
+                    debugger;
+                    that.$router.push({
+                        path:'/login',
+                        query:{
+                            username:Account,
+                            redirecturl:redirecturls
+                        }
+                    })
                 }
-
 
             },
             GetRequest() {
@@ -326,7 +353,6 @@
 
                 let routeData = this.$router.resolve({
                     path: "/serviceProtocol",
-
                 });
 
                 window.open(routeData.href, '_blank');

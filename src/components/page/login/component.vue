@@ -45,13 +45,12 @@
 </template>
 <script>
     import FooterBar from './footer'
-    import {setCookies,removeCookies,getCookies} from "../../../utils/cookie.js";
+    import {setCookies,removeCookies,getCookies} from "./cookie";
     import {SECRETSTRING} from './constants'
     import {login, newUser} from "../../../api/getdata";
     import axios from 'axios'
     import CryptoJS from 'crypto-js'
     import URL from '../../../api/host'
-    import {validateToken,redirect} from '../../../utils/token'
 
     export default {
         data(){
@@ -87,24 +86,6 @@
         */
         beforeCreate(){
             document.title = '嗨聊平台-登录'
-        },
-        created(){
-            
-            const cookies = getCookies('remember')?getCookies('remember').split('&'):''
-            if(cookies){
-                if(this.$route.query.username){
-                    this.form.name = this.$route.query.username
-                    this.form.password = ''
-                    this.rememberMe = false
-                }else{
-                    this.form.name = cookies[0]
-                    this.form.password = cookies[1]
-                    this.rememberMe = cookies.length === 2
-                }
-            }else{
-                this.rememberMe  = false
-            }
-        
         },
         methods:{
             /**
@@ -183,7 +164,7 @@
                                 if(res){
                                     const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
                                     const redirecturl = matchStr ? matchStr[1].replace('&type=login','').replace('&type=logout','') : null;
-                                    redirect(response.data.Token,redirecturl)
+                                    that.redirect(response.data.Token,redirecturl)
                                 }
                             })
                         }
@@ -200,7 +181,29 @@
                 var params = location.search;
                 // location.href = "https://register.hightalk.online" + params;
             },
-
+            validateToken(token){
+                const that = this
+                const data ={
+                    Token:token
+                }
+                axios.post(URL.SSOServerApi+'/api/Tenant/ValidateToken', data)
+                    .then(function (response) {
+                        if(response.data.IsValid){
+                            debugger;
+                            setCookies('token',token,{expires:1}).then(()=>{
+                                
+                                    const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
+                                    const redirecturl = matchStr ? matchStr[1].replace('&type=login','').replace('&type=logout','') : null;
+                                    that.redirect(token,redirecturl)
+                            })
+                        }else{
+                            removeCookies('token')
+                        }
+                    })
+                    .catch(function (err) {
+                       removeCookies('token')
+                    });
+            },
             validate_someThing(v){
                 const that = this
                 if(v.data&&v.data.ErrorCodes){
@@ -218,7 +221,16 @@
                     return true
                 }
             },
- 
+            redirect(token,redirecturl){
+                if(redirecturl){
+                    const url = redirecturl + "&token=" + token + "&rk=" + new Date().getTime()
+                    window.location.href = decodeURIComponent(url)
+                }else{
+                   const host = window.location.host.indexOf('test')>-1?'https://portal-test.hightalk.ai/':'https://portal.hightalk.online/'
+                    const url = host
+                    window.location.href = decodeURIComponent(url)
+                }
+            }
         }
     }
 </script>
