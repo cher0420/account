@@ -1,24 +1,50 @@
-import { setCookie, removeCookies } from './cookie'
-export async function validateToken(token) {
-    const that = this
+import { setCookies, removeCookies } from './cookie'
+import URL from '../api/host'
+
+import axios from 'axios'
+
+export function validateToken(token) {
     const data = {
         Token: token
     }
-    axios.post(URL.SSOServerApi + '/api/Tenant/ValidateToken', data)
-        .then(function(response) {
-            if (response.data.IsValid) {
-                setCookies('token', token, { expires: 1 }).then(() => {
-                    const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
-                    const redirecturl = matchStr ? matchStr[1].replace('&type=login', '').replace('&type=logout', '') : null;
-                    redirect(token, redirecturl)
-                })
-            } else {
-                removeCookies('token')
+    return new Promise(
+        (resolve,reject) =>{
+            const path = window.location.href
+            if(path.indexOf('&type=logout')>-1){
+                removeCookies('token').then(
+                    () =>{
+                        resolve(true)
+                    }
+                )
+            }else{
+                axios.post(URL.SSOServerApi + '/api/Tenant/ValidateToken', data)
+                    .then(function(response) {
+                        if (response.data.IsValid) {
+                            setCookies('token', token, { expires: 1 }).then(() => {
+                                const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
+                                const redirecturl = matchStr ? matchStr[1].replace('&type=login', '').replace('&type=logout', '') : null;
+                                redirect(token, redirecturl)
+                                reject
+                            })
+                        } else {
+                            removeCookies('token').then(
+                                () =>{
+                                    resolve(true)
+                                }
+                            )
+                        }
+                    })
+                    .catch(function(err) {
+                        removeCookies('token').then(
+                            () =>{
+                                resolve(true)
+                            }
+                        )
+                    });
             }
-        })
-        .catch(function(err) {
-            removeCookies('token')
-        });
+        }
+    )
+
 }
 
 export function redirect(token, redirecturl) {

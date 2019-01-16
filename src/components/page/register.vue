@@ -320,7 +320,6 @@
                 } else {
                     const Account = that.ruleForm.username + "@" + that.ruleForm.domain + ".hightalk.online";
                     // window.location.href = host.SSOWebUrl.zh + '?username=' + Account + '&redirecturl=' + redirecturls;
-                    debugger;
                     that.$router.push({
                         path:'/login',
                         query:{
