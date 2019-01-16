@@ -85,7 +85,7 @@
         生命周期函数
         */
         beforeCreate(){
-            document.title = '嗨聊平台-登录'
+            document.title = '登录'
         },
         methods:{
             /**
@@ -158,7 +158,7 @@
                 axios.post(URL.SSOServerApi+'/api/Tenant/ValidateLogin', data)
                     .then(function (response) {
                         if(!response.data.ErrorCodes){
-                    
+
                          setCookies('token',response.data.Token,{expires:1}).then(()=>{
                                 const res = that.validate_someThing(response)
                                 if(res){
@@ -189,9 +189,8 @@
                 axios.post(URL.SSOServerApi+'/api/Tenant/ValidateToken', data)
                     .then(function (response) {
                         if(response.data.IsValid){
-                            debugger;
                             setCookies('token',token,{expires:1}).then(()=>{
-                                
+
                                     const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
                                     const redirecturl = matchStr ? matchStr[1].replace('&type=login','').replace('&type=logout','') : null;
                                     that.redirect(token,redirecturl)

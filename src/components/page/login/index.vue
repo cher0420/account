@@ -86,10 +86,10 @@
         生命周期函数
         */
         beforeCreate(){
-            document.title = '嗨聊平台-登录'
+            document.title = '登录'
         },
         created(){
-            
+
             const cookies = getCookies('remember')?getCookies('remember').split('&'):''
             if(cookies){
                 if(this.$route.query.username){
@@ -104,7 +104,7 @@
             }else{
                 this.rememberMe  = false
             }
-        
+
         },
         methods:{
             /**
@@ -177,7 +177,7 @@
                 axios.post(URL.SSOServerApi+'/api/Tenant/ValidateLogin', data)
                     .then(function (response) {
                         if(!response.data.ErrorCodes){
-                    
+
                          setCookies('token',response.data.Token,{expires:1}).then(()=>{
                                 const res = that.validate_someThing(response)
                                 if(res){
@@ -218,7 +218,7 @@
                     return true
                 }
             },
- 
+
         }
     }
 </script>

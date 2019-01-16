@@ -15,7 +15,7 @@
                 </div>
                 <div class="ms-title">
                     <div class="ms-title-l">
-                        欢迎注册嗨聊平台
+                        欢迎注册
                     </div>
                 </div>
                 <el-form :model="ruleForm" label-width="0px" class="ms-content demo-ruleForm">
@@ -157,8 +157,8 @@
                         <el-checkbox :disabled="register" v-model="ruleForm.reader" style="color: #999">我已阅读并同意
                         </el-checkbox>
                         <span style="color: #999">  <span style="color: #2a8ce7;cursor: pointer" @click="open()"
-                                                          id="test">嗨聊平台服务协议</span> 和 <span
-                            style="color: #2a8ce7;cursor: pointer" @click="open2('/test')">嗨聊平台隐私声明 </span></span>
+                                                          id="test">服务协议</span> 和 <span
+                            style="color: #2a8ce7;cursor: pointer" @click="open2('/test')">隐私声明 </span></span>
                     </div>
 
 
@@ -240,9 +240,6 @@
 
             }
         },
-        beforeCreate(){
-            document.title = '嗨聊平台-注册'
-        },
         created() {
 
         },
@@ -305,10 +302,7 @@
                     })
                     // ssoUrl = host.SSOWebUrl.zh;
                 }
-                // this.$router.push({
-                //     path:'/login'
-                // })
-                // window.location.href = ssoUrl
+
             },
             blankLoginIn() {
                 let that = this;
@@ -336,6 +330,7 @@
                     })
                 }
 
+
             },
             GetRequest() {
                 let strr = "";
@@ -353,6 +348,7 @@
 
                 let routeData = this.$router.resolve({
                     path: "/serviceProtocol",
+
                 });
 
                 window.open(routeData.href, '_blank');
@@ -426,7 +422,7 @@
                     }
                 };
                 let registerUser = await newUser(data);  // 调用注册接口
-                if (registerUser.Status == 1) {
+                if (registerUser.Status == 1) {  // Code
 
                     that.$message({
                         message: "注册成功，将返回登录页面",
@@ -904,3 +900,7 @@
         color: #fff;
     }
 </style>
+
+
+
+
