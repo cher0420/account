@@ -6,21 +6,19 @@
         <div class="lump-contrainer">
             <div class="welcome">欢迎登录</div>
             <el-form :model="form" :rules="rules" ref="form" label-width="0">
-                <el-form-item class="margin-t-40 p-relative" :error="errorMsg" prop="name">
-                    <el-input type="text" name="name" id="name" placeholder="请输入用户名" v-model="form.name" @keyup.enter.native="signIn"/>
-                    <span class="for-IE-special"></span>
-                    <!--<span v-if='itemError' class="item-error el-form-item__error">用户名或密码错误</span>-->
+                <el-form-item class="margin-t-40 for-IE-special-container" :error="errorMsg" prop="name">
+                    <el-input type="text" name="name" id="name" placeholder="请输入用户名" v-model="form.name" @keyup.enter.native="signIn" @focus="showSomeThing('name','showNameTips')" @blur="showSomeThing('name','showNameTips')" @change="showSomeThing('name','showNameTips')"/>
+                    <span v-show="showNameTips" class="for-IE-special">请输入用户名</span>
                 </el-form-item>
-                <el-form-item class="margin-t-30 p-relative" :error="errorMsg" prop="password">
-                    <el-input :type="showPWDStatus?'text':'password'" name="password" id="password" placeholder="请输入密码" v-model="form.password" @keyup.enter.native="signIn">
+                <el-form-item class="margin-t-30 for-IE-special-container" :error="errorMsg" prop="password">
+                    <el-input :type="showPWDStatus?'text':'password'" name="password" id="password" placeholder="请输入密码" v-model="form.password" @keyup.enter.native="signIn" @focus="showSomeThing('password','showPWDTips')" @blur="showSomeThing('password','showPWDTips')" @change="showSomeThing('name','showNameTips')">
                         <i
                             :class="showPWDStatus?['showPWD','PWD']:['noShowPwd','PWD']"
                             slot="suffix"
                             @click="showPWD">
                         </i>
                     </el-input>
-                    <span class="for-IE-special"></span>
-                    <!--<span v-if='itemError' class="item-error el-form-item__error">用户名或密码错误</span>-->
+                    <span v-show="showPWDTips" class="for-IE-special">请输入密码</span>
                 </el-form-item>
             <div class="margin-t-30 clearfix">
                 <el-checkbox v-model="rememberMe" class="f-l" style="color: #999;" @change = 'remember'>记住密码</el-checkbox>
@@ -46,12 +44,12 @@
 <script>
     import FooterBar from './footer'
     import {setCookies,removeCookies,getCookies} from "../../../utils/cookie.js";
-    import {SECRETSTRING} from './constants'
-    import {login, newUser} from "../../../api/getdata";
     import axios from 'axios'
     import CryptoJS from 'crypto-js'
     import URL from '../../../api/host'
-    import {validateToken,redirect} from '../../../utils/token'
+    import {redirect} from '../../../utils/token'
+    import {LOGIN} from "../../../api/api";
+    import {isIE9} from "../../../utils/browserOS";
 
     export default {
         data(){
@@ -70,6 +68,8 @@
                         }
                     ]
                 },
+                showPWDTips:false,
+                showNameTips:false,
                 rememberMe:false,
                 loadingText:'立即登录',
                 disabled: false,
@@ -87,6 +87,11 @@
         */
         beforeCreate(){
             document.title = '登录'
+            if(isIE9()){
+                this.showPWDTips = this.showNameTips = true
+            }else{
+                this.showPWDTips = this.showNameTips = false
+            }
         },
         created(){
 
@@ -139,6 +144,11 @@
                 console.log('解密字段',decrypted.toString(CryptoJS.enc.Utf8))
                 return decrypted.toString(CryptoJS.enc.Utf8);
             },
+            showSomeThing(key,v){
+                if(isIE9()){
+                    this[v] = !this.form[key];
+                }
+            },
             showPWD(){
                 this.showPWDStatus = !this.showPWDStatus
             },
@@ -174,7 +184,7 @@
                     Account:v.name,
                     Password:v.password.length>=32?v.password:md5(v.password),
                 }
-                axios.post(URL.SSOServerApi+'/api/Tenant/ValidateLogin', data)
+                axios.post(URL.SSOServerApi + LOGIN, data)
                     .then(function (response) {
                         if(!response.data.ErrorCodes){
 
@@ -248,6 +258,20 @@
     }
     .p-absolute{
         position: absolute;
+    }
+    .for-IE-special-container{
+        .el-form-item__content{
+            position: relative;
+        }
+    }
+    .for-IE-special{
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-block;
+        height: 50px;
+        line-height: 50px;
+        padding-left: 25px;
     }
 </style>
 <style lang="scss">
