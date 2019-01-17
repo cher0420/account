@@ -1,7 +1,7 @@
 {
-  "name": "vue-manage-system",
+  "name": "",
   "version": "3.2.0",
-  "description": "基于Vue.js 2.x系列 + element-ui",
+  "description": "base Vue.js 2.x + element-ui",
   "author": "",
   "private": true,
   "scripts": {
