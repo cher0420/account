@@ -13,21 +13,21 @@ export default new Router({
             path: "/login",
             component:() => import ('../components/page/login')
         },
-        {
-            // path: "/",
-            // component: resolve =>
-            //     require(["../components/common/Home.vue"], resolve),
-            // meta: { title: "首页详情" },
-            // children: [
-            //     {
-            //         path: "/dashboard",
-            //         component: resolve =>
-            //             require([""], resolve),
-            //         meta: { title: "系统首页" }
-            //     },
-            //
-            // ]
-        },
+        // {
+        //     path: "/",
+        //     component: resolve =>
+        //         require(["../components/common/Home.vue"], resolve),
+        //     meta: { title: "首页详情" },
+        //     children: [
+        //         {
+        //             path: "/dashboard",
+        //             component: resolve =>
+        //                 require([""], resolve),
+        //             meta: { title: "系统首页" }
+        //         },
+        //
+        //     ]
+        // },
         {
             path: "/register",
             component: resolve =>
