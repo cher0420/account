@@ -7,11 +7,11 @@
             <div class="welcome">欢迎登录</div>
             <el-form :model="form" :rules="rules" ref="form" label-width="0">
                 <el-form-item class="margin-t-40 for-IE-special-container" :error="errorMsg" prop="name">
-                    <el-input type="text" name="name" id="name" placeholder="请输入用户名" v-model="form.name" @keyup.enter.native="signIn" @focus="showSomeThing('name','showNameTips')" @blur="showSomeThing('name','showNameTips')" @change="showSomeThing('name','showNameTips')"/>
+                    <el-input type="text" name="name" id="name" placeholder="请输入用户名" v-model="form.name" @keyup.enter.native="signIn" @focus="hideSomeThing('name','showNameTips')" @blur="showSomeThing('name','showNameTips')" @change="hideSomeThing('name','showNameTips')"/>
                     <span v-show="showNameTips" class="for-IE-special">请输入用户名</span>
                 </el-form-item>
                 <el-form-item class="margin-t-30 for-IE-special-container" :error="errorMsg" prop="password">
-                    <el-input :type="showPWDStatus?'text':'password'" name="password" id="password" placeholder="请输入密码" v-model="form.password" @keyup.enter.native="signIn" @focus="showSomeThing('password','showPWDTips')" @blur="showSomeThing('password','showPWDTips')" @change="showSomeThing('name','showNameTips')">
+                    <el-input :type="showPWDStatus?'text':'password'" name="password" id="password" placeholder="请输入密码" v-model="form.password" @keyup.enter.native="signIn" @focus="hideSomeThing('password','showPWDTips')" @blur="showSomeThing('password','showPWDTips')" @change="hideSomeThing('password','showNameTips')">
                         <i
                             :class="showPWDStatus?['showPWD','PWD']:['noShowPwd','PWD']"
                             slot="suffix"
@@ -146,6 +146,11 @@
             showSomeThing(key,v){
                 if(isIE9()){
                     this[v] = !this.form[key];
+                }
+            },
+            hideSomeThing(key,v){
+                if(isIE9()){
+                    this[v] = false
                 }
             },
             showPWD(){

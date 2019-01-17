@@ -15,6 +15,8 @@ fieldset, img { border:0; }
 button, input, select, textarea { font-size:100%; }
 table { border-collapse:collapse; border-spacing:0; }
 body,html,img {height:100%;}
+input::-ms-clear{display:none;}
+input::-ms-reveal{display:none;}
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar
