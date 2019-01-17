@@ -10,28 +10,27 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-      '/api':{
-          target:'http://jsonplaceholder.typicode.com',
-          changeOrigin:true,
-          pathRewrite:{
-              '/api':''
-          }
-      },
-      '/ms':{
-          target: 'https://www.easy-mock.com/mock/592501a391470c0ac1fab128',
-          changeOrigin: true
-      }
-    },
+      // proxyTable: {
+      //     '/api': {// '/api':匹配项
+      //         target: 'https://192.168.1.103:10001',// 接口的域名
+      //         secure: false,// 如果是https接口，需要配置这个参数
+      //         changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
+      //         // pathRewrite: {// 如果接口本身没有/api需要通过pathRewrite来重写了地址
+      //         //   '^api': ''
+      //         // }
+      //
+      //
+      //     }
+      // },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 3000, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
-    
+
     /**
      * Source Maps
      */

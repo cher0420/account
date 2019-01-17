@@ -7,26 +7,11 @@ export default new Router({
     routes: [
         {
             path: "/",
-            redirect: "/register"
+            redirect: "/login"
         },
         {
             path: "/login",
             component:() => import ('../components/page/login')
-        },
-        {
-            path: "/",
-            component: resolve =>
-                require(["../components/common/Home.vue"], resolve),
-            meta: { title: "首页详情" },
-            children: [
-                {
-                    path: "/dashboard",
-                    component: resolve =>
-                        require(["../components/page/Dashboard.vue"], resolve),
-                    meta: { title: "系统首页" }
-                },
-
-            ]
         },
         {
             path: "/register",
@@ -43,7 +28,11 @@ export default new Router({
             component: resolve =>
                 require(["../components/page/privacyStatement.vue"], resolve)
         },
+        {
+            path: '*',
+            name: 'Error',
+            redirect: "/"
+        }
 
     ],
-    mode: 'history'
 });
