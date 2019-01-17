@@ -46,7 +46,6 @@
     import {setCookies,removeCookies,getCookies} from "../../../utils/cookie.js";
     import axios from 'axios'
     import CryptoJS from 'crypto-js'
-    import URL from '../../../api/host'
     import {redirect} from '../../../utils/token'
     import {LOGIN} from "../../../api/api";
     import {isIE9} from "../../../utils/browserOS";

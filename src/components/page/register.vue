@@ -195,7 +195,6 @@
 </template>
 
 <script>
-    import host from "../../api/host";
     import {newUser} from "../../api/getdata";  // api
 
     export default {

@@ -1,5 +1,4 @@
 import { setCookies, removeCookies } from './cookie'
-import URL from '../api/host'
 
 import axios from 'axios'
 
