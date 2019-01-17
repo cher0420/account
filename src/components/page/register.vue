@@ -244,6 +244,9 @@
 
         },
         mounted() {
+            document.getElementsByTagName("title")[0].innerText = '注册';
+
+
             let that = this;
             let SlideVerifyPlug = window.slideVerifyPlug;
             this.slideVerify = new SlideVerifyPlug('#verify-wrap', {
