@@ -14,19 +14,19 @@ export default new Router({
             component:() => import ('../components/page/login')
         },
         {
-            path: "/",
-            component: resolve =>
-                require(["../components/common/Home.vue"], resolve),
-            meta: { title: "首页详情" },
-            children: [
-                {
-                    path: "/dashboard",
-                    component: resolve =>
-                        require(["../components/page/Dashboard.vue"], resolve),
-                    meta: { title: "系统首页" }
-                },
-
-            ]
+            // path: "/",
+            // component: resolve =>
+            //     require(["../components/common/Home.vue"], resolve),
+            // meta: { title: "首页详情" },
+            // children: [
+            //     {
+            //         path: "/dashboard",
+            //         component: resolve =>
+            //             require([""], resolve),
+            //         meta: { title: "系统首页" }
+            //     },
+            //
+            // ]
         },
         {
             path: "/register",

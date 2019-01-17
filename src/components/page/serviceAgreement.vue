@@ -834,8 +834,7 @@ mso-fareast-font-family:宋体;color:#656972;mso-font-kerning:0pt">   </span></p
 </template>
 
 <script>
-    import Schart from 'vue-schart';
-    import bus from '../common/bus';
+
 
     export default {
         name: 'test',
