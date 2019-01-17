@@ -188,7 +188,7 @@
                     Account:v.name,
                     Password:v.password.length>=32?v.password:md5(v.password),
                 }
-                axios.post(URL.SSOServerApi + LOGIN, data)
+                axios.post(LOGIN, data)
                     .then(function (response) {
                         if(!response.data.ErrorCodes){
                          setCookies('token',response.data.Token,{expires:1}).then(()=>{

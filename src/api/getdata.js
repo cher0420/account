@@ -13,12 +13,7 @@ import base from "./host";
 /**
  *  01.注册新用户
  */
-export const newUser = params => getRequest(base.SSOServerApi + "/api/Tenant/Register?v=" + new Date(), params, "POST");  //  注册新用户
-
-/**
- * 02.登录
- */
-export const login = params => getRequest('https://auth.hightalk.online/zh-cn/login/index',params,'POST')
+export const newUser = params => getRequest("/api/Tenant/Register?v=" + new Date(), params, "POST");  //  注册新用户
 
 
 

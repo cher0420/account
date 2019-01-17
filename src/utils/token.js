@@ -17,7 +17,7 @@ export function validateToken(token) {
                     }
                 )
             }else{
-                axios.post(URL.SSOServerApi + '/api/Tenant/ValidateToken', data)
+                axios.post('/api/Tenant/ValidateToken', data)
                     .then(function(response) {
                         if (response.data.IsValid) {
                             setCookies('token', token, { expires: 1 }).then(() => {
