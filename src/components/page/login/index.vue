@@ -87,14 +87,13 @@
         */
         beforeCreate(){
             document.title = '登录'
-            if(isIE9()){
-                this.showPWDTips = this.showNameTips = true
-            }else{
-                this.showPWDTips = this.showNameTips = false
-            }
         },
         created(){
-
+            if(isIE9()){
+                this.showPWDTips = true;this.showNameTips = true
+            }else{
+                this.showPWDTips = false;this.showNameTips = false
+            }
             const cookies = getCookies('remember')?getCookies('remember').split('&'):''
             if(cookies){
                 if(this.$route.query.username){
@@ -187,7 +186,6 @@
                 axios.post(URL.SSOServerApi + LOGIN, data)
                     .then(function (response) {
                         if(!response.data.ErrorCodes){
-
                          setCookies('token',response.data.Token,{expires:1}).then(()=>{
                                 const res = that.validate_someThing(response)
                                 if(res){
@@ -196,6 +194,12 @@
                                     redirect(response.data.Token,redirecturl)
                                 }
                             })
+                        }else{
+                            that.errorMsg = Math.random()
+                            that.$nextTick(() => {
+                                that.errorMsg = response.data.ErrorCodes[0].ErrorMessage
+                            })
+                            that.loadingText = '立即登录'
                         }
                     })
                     .catch(function (err) {
