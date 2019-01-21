@@ -35,7 +35,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
-    }
+    },
+      before(app){
+          app.get('/web/adminportal', function(req, res) {
+              res.redirect(302, 'https://portal-test.hightalk.ai');
+          });
+      }
   },
   plugins: [
     new webpack.DefinePlugin({

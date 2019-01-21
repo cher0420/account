@@ -1,11 +1,9 @@
 import { setCookies, removeCookies } from './cookie'
+import {ADMINPORTAL,VALIDATETOKEN} from "../api/api";
 
 import axios from 'axios'
 
 export function validateToken(token) {
-    const data = {
-        Token: token
-    }
     return new Promise(
         (resolve,reject) =>{
             const path = window.location.href
@@ -16,8 +14,14 @@ export function validateToken(token) {
                     }
                 )
             }else{
-                axios.post('/api/Tenant/ValidateToken', data)
-                    .then(function(response) {
+                axios({
+                    method: 'post',
+                    url: VALIDATETOKEN,
+                    headers:{
+                        'Content-Type':'application/json',
+                        'Access-Token':token
+                    }
+                }).then(function(response) {
                         if (response.data.IsValid) {
                             setCookies('token', token, { expires: 1 }).then(() => {
                                 const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
@@ -48,11 +52,9 @@ export function validateToken(token) {
 
 export function redirect(token, redirecturl) {
     if (redirecturl) {
-        const url = redirecturl + "&token=" + token + "&rk=" + new Date().getTime()
+        const url = ADMINPORTAL + "&token=" + token + "&rk=" + new Date().getTime()
         window.location.href = decodeURIComponent(url)
     } else {
-        const host = window.location.host.indexOf('test') > -1 ? 'https://portal-test.hightalk.ai/' : 'https://portal.hightalk.online/'
-        const url = host
-        window.location.href = decodeURIComponent(url)
+        window.location.href = ADMINPORTAL
     }
 }

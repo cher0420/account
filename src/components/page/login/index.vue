@@ -94,20 +94,19 @@
                 this.showPWDTips = false;this.showNameTips = false
             }
             const cookies = getCookies('remember')?getCookies('remember').split('&'):''
-            if(cookies){
-                if(this.$route.query.username){
-                    this.form.name = this.$route.query.username
-                    this.form.password = ''
-                    this.rememberMe = false
-                }else{
+            if(this.$route.query.username){
+                this.form.name = this.$route.query.username
+                this.form.password = ''
+                this.rememberMe = false
+            }else{
+                if(cookies){
                     this.form.name = cookies[0]
                     this.form.password = cookies[1]
                     this.rememberMe = cookies.length === 2
+                }else{
+                    this.rememberMe  = false
                 }
-            }else{
-                this.rememberMe  = false
             }
-
         },
         methods:{
             /**

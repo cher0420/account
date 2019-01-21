@@ -15,17 +15,26 @@ import {validateToken} from './utils/token'
 Vue.use(ElementUI, { size: 'small' });
 
 const token = getCookies('token')
-validateToken(token).then(
-    () => {
-        new Vue({
-            router,
-            store,
-            render: h => h(App)
-        }).$mount('#app');
-    }
-).catch(
-    err =>err
-)
+if(token){
+    validateToken(token).then(
+        () => {
+            new Vue({
+                router,
+                store,
+                render: h => h(App)
+            }).$mount('#app');
+        }
+    ).catch(
+        err =>err
+    )
+}else{
+    new Vue({
+        router,
+        store,
+        render: h => h(App)
+    }).$mount('#app');
+}
+
 
 
 
