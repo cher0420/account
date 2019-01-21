@@ -40,7 +40,7 @@ const PRODUCT_URL = {
     SSOServerApi:"https://hightalkssoapi-staging.azurewebsites.net", // 注册页面 服务器资源地址
     requestHost: 'https://hightalkadminapi-staging.azurewebsites.net'
 }
-export default  PRODUCT_URL
+export default  TEST_URL
 
 
 
