@@ -38,7 +38,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     },
     before(app){
           app.get('/web/adminportal', function(req, res) {
-              res.redirect(302, 'https://portal-test.hightalk.ai');
+              res.redirect(302, 'https://192.168.1.103:10033');
           });
       }
   },

@@ -196,7 +196,7 @@
 
 <script>
     import {newUser} from "../../api/getdata";  // api
-
+    import {encrypt,decrypt} from '../../utils/encrypt'
     export default {
         data() {
 
@@ -239,6 +239,7 @@
             }
         },
         created() {
+            console.log(this.$route.query)
 
         },
         mounted() {
@@ -292,9 +293,9 @@
                 if (redirecturls != undefined) {
                     that.$router.push({
                         path:'/login',
-                        query:{
-                            redirecturl:redirecturls
-                        }
+                        // query:{
+                        //     redirecturl:redirecturls
+                        // }
                     })
                     // ssoUrl = host.SSOWebUrl.zh + "?redirecturl=" + redirecturls;
                 } else {
@@ -310,22 +311,18 @@
                 let redirecturls = this.GetRequest();
                 if (redirecturls == undefined) {
                     const Account = that.ruleForm.username + "@" + that.ruleForm.domain + ".hightalk.online";
-                    // window.location.href = host.SSOWebUrl.zh + '?username=' + Account
                     that.$router.push({
                         path:'/login',
                         query:{
                             username:Account,
-                            redirecturl:redirecturls
                         }
                     })
                 } else {
                     const Account = that.ruleForm.username + "@" + that.ruleForm.domain + ".hightalk.online";
-                    // window.location.href = host.SSOWebUrl.zh + '?username=' + Account + '&redirecturl=' + redirecturls;
                     that.$router.push({
                         path:'/login',
                         query:{
                             username:Account,
-                            redirecturl:redirecturls
                         }
                     })
                 }
@@ -355,11 +352,7 @@
 
             },
             open2() {
-                // const href = window.location.host + '#';
-                //
-                // console.log(href + v)
-                //
-                // window.open(href + v);
+
                 let routeData = this.$router.resolve({
                     path: "/privacyStatement",
 
@@ -381,7 +374,6 @@
                 }
 
                 let that = this;
-                console.log(this.ruleForm.reader);
                 if (!this.ruleForm.reader) {
                     this.$message({
                         message: '请勾选同意协议',
@@ -391,9 +383,7 @@
                 }
 
                 const Account = that.ruleForm.username + "@" + that.ruleForm.domain + ".hightalk.online";
-                let password = md5(that.ruleForm.password)
-
-                // password =
+                let password = encrypt(that.ruleForm.password)
                 let data = {
                     "TenantInfo": {
                         "ID": "",

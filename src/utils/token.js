@@ -53,8 +53,8 @@ export function validateToken(token) {
 export function redirect(token, redirecturl) {
     if (redirecturl) {
         const url = ADMINPORTAL + "&token=" + token + "&rk=" + new Date().getTime()
-        window.location.href = decodeURIComponent(url)
+        // window.location.href = decodeURIComponent(url)
     } else {
-        window.location.href = ADMINPORTAL
+        // window.location.href = ADMINPORTAL
     }
 }

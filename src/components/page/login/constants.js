@@ -1,1 +1,1 @@
-export const SECRETSTRING = 'adminPortal secret +ABC'
+export const REMEMBER = '_ug#r%-49f'

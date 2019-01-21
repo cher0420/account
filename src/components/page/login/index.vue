@@ -21,7 +21,7 @@
                     <span v-show="showPWDTips" class="for-IE-special">请输入密码</span>
                 </el-form-item>
             <div class="margin-t-30 clearfix">
-                <el-checkbox v-model="rememberMe" class="f-l" style="color: #999;" @change = 'remember'>记住密码</el-checkbox>
+                <el-checkbox v-model="rememberMe" class="f-l" style="color: #999;" >记住密码</el-checkbox>
                 <span class="f-r primary-color register" @click="register">立即注册</span>
             </div>
             <div class="margin-t-40">
@@ -45,10 +45,11 @@
     import FooterBar from './footer'
     import {setCookies,removeCookies,getCookies} from "../../../utils/cookie.js";
     import axios from 'axios'
-    import CryptoJS from 'crypto-js'
     import {redirect} from '../../../utils/token'
+    import {decrypt,encrypt} from "../../../utils/encrypt";
     import {LOGIN} from "../../../api/api";
     import {isIE9} from "../../../utils/browserOS";
+    import {REMEMBER} from "./constants";
 
     export default {
         data(){
@@ -93,15 +94,15 @@
             }else{
                 this.showPWDTips = false;this.showNameTips = false
             }
-            const cookies = getCookies('remember')?getCookies('remember').split('&'):''
+            const cookies = getCookies(REMEMBER)?getCookies(REMEMBER).split('&'):''
             if(this.$route.query.username){
                 this.form.name = this.$route.query.username
                 this.form.password = ''
                 this.rememberMe = false
             }else{
                 if(cookies){
-                    this.form.name = cookies[0]
-                    this.form.password = cookies[1]
+                    this.form.name = decrypt(cookies[0])
+                    this.form.password = decrypt(cookies[1])
                     this.rememberMe = cookies.length === 2
                 }else{
                     this.rememberMe  = false
@@ -109,38 +110,6 @@
             }
         },
         methods:{
-            /**
-             * @return ciphertext
-             */
-            encrypt(message){
-                // Encrypt
-                // const ciphertext = CryptoJS.AES.encrypt(message, SECRETSTRING).toString();
-                // console.log('加密字段',ciphertext);
-                // return ciphertext
-                // export var des = (message) => {
-                    var keyHex = CryptoJS.enc.Utf8.parse('ANEG124*+$@223U34SG]34#0394XP0455@@##');
-                    var encrypted = CryptoJS.DES.encrypt(message, keyHex, {
-                        mode: CryptoJS.mode.ECB,
-                        padding: CryptoJS.pad.Pkcs7
-                    });
-                    console.log('加密字段',encrypted.ciphertext.toString());
-                    return encrypted.ciphertext.toString();
-                // }
-
-            },
-            /**
-             * @return string
-             */
-            decrypt(ciphertext){
-                var keyHex = CryptoJS.enc.Utf8.parse('ANEG124*+$@223U34SG]34#0394XP0455@@##');
-                var decrypted = CryptoJS.DES.decrypt(
-                    ciphertext,keyHex, {
-                    mode: CryptoJS.mode.ECB,
-                    padding: CryptoJS.pad.Pkcs7
-                });
-                console.log('解密字段',decrypted.toString(CryptoJS.enc.Utf8))
-                return decrypted.toString(CryptoJS.enc.Utf8);
-            },
             showSomeThing(key,v){
                 if(isIE9()){
                     this[v] = !this.form[key];
@@ -162,13 +131,6 @@
                 var r = window.location.search.substr(1).match(reg);
                 if (r != null) return unescape(r[2]); return null;
             },
-            /**
-             *
-             */
-            remember(v){
-                // const str = this.encrypt(`${this.form.name}&${this.form.password}`)
-                // const password = this.decrypt(str)
-            },
             signIn(){
                 const that = this
                 this.$refs['form'].validate((valid) => {
@@ -184,7 +146,7 @@
                 const that =this
                 const data = {
                     Account:v.name,
-                    Password:v.password.length>=32?v.password:md5(v.password),
+                    Password:encrypt(v.password),
                 }
                 axios.post(LOGIN, data)
                     .then(function (response) {
@@ -207,15 +169,15 @@
                     })
                     .catch(function (err) {
                         removeCookies('token')
-                    //    that.validate_someThing(err)
                     });
             },
             register() {
-                this.$router.push({
-                    path: '/register'
-                })
                 var params = location.search;
-                // location.href = "https://register.hightalk.online" + params;
+
+                console.log(params);
+                this.$router.push({
+                    path: '/register',
+                })
             },
 
             validate_someThing(v){
@@ -226,11 +188,12 @@
                     return false
                 }else {
                     if(that.rememberMe){
-                        const password = that.form.password.length>=32?that.form.password:md5(that.form.password)
-                        const rememberStr = that.form.name+'&'+password
-                        setCookies('remember',rememberStr,{expires: 365})
+                        const password = encrypt(that.form.password)
+                        const name = encrypt(that.form.name)
+                        const rememberStr = name+'&'+password
+                        setCookies(REMEMBER,rememberStr,{expires: 365})
                     }else{
-                        removeCookies('remember')
+                        removeCookies(REMEMBER)
                     }
                     return true
                 }
