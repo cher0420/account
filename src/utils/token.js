@@ -48,12 +48,15 @@ export function validateToken(token) {
 }
 
 export function redirect(token, redirecturl) {
+    const host = window.location.host
     if (redirecturl) {
         const url = redirecturl + "&token=" + token + "&rk=" + new Date().getTime()
         window.location.href = decodeURIComponent(url)
-    } else {
-        const host = window.location.host.indexOf('test') > -1 ? 'https://portal-test.hightalk.ai/' : 'https://portal.hightalk.online/'
-        const url = host
-        window.location.href = decodeURIComponent(url)
+    } else if(host.indexOf('test') > -1){
+        window.location.href = decodeURIComponent('https://portal-test.hightalk.ai/')
+    } else if(host.indexOf('staging') > -1){
+        window.location.href = decodeURIComponent('https://portal-staging.hightalk.ai/')
+    } else{
+        window.location.href = decodeURIComponent('https://portal.hightalk.online/')
     }
 }
