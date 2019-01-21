@@ -38,7 +38,13 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     },
     before(app){
           app.get('/web/adminportal', function(req, res) {
-              res.redirect(302, 'https://192.168.1.103:10033');
+              const value = req.query
+              console.log(value)
+              const token = value.token
+              const rk = value.rk
+              const sid = value.sid
+              res.redirect(302, 'http://localhost:3001/?sid='+sid+'&token='+token+'&rk='+rk);
+              // res.redirect(302, 'http://192.168.1.103:10033');
           });
       }
   },
