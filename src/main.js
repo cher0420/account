@@ -5,14 +5,14 @@ import {store} from './store/store';
 import {getCookies} from "./utils/cookie";
 
 import 'element-ui/lib/theme-chalk/index.css';    // 默认主题
-import "../static/css/theme/index.css"
+// import "../static/css/theme/index.css"
 
-import ElementUI from 'element-ui';
+// import ElementUI from 'element-ui';
 
 import "babel-polyfill";
 import {validateToken} from './utils/token'
 
-Vue.use(ElementUI, { size: 'small' });
+// Vue.use(ElementUI, { size: 'small' });
 
 const token = getCookies('token')
 if(token){
