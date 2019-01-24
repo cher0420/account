@@ -196,7 +196,9 @@
 
 <script>
     import {newUser} from "../../api/getdata";  // api
-    import {encrypt,decrypt} from '../../utils/encrypt'
+    import {encrypt} from '../../../static/auth/rsa'
+    import {GETKEY} from "../../api/api";
+    import axios from 'axios'
     export default {
         data() {
 
@@ -383,48 +385,60 @@
                 }
 
                 const Account = that.ruleForm.username + "@" + that.ruleForm.domain + ".hightalk.online";
-                let password = encrypt(that.ruleForm.password)
-                let data = {
-                    "TenantInfo": {
-                        "ID": "",
-                        "TenantName": that.ruleForm.companyName, // 租户名
-                        "Email": "",
-                        "Tel": "",
-                        "TenantSite": "",
-                        "Trade": "",
-                        "Address": "",
-                        "LicenseNo": "",
-                        "RegistrationNo": "",
-                        "Description": "",
-                        "Status": 1
-                    },
-                    "TenantUserProfiles": {
-                        "ID": "",
-                        "FullName": that.ruleForm.username, // 用户名
-                        "Photo": "",
-                        "TenantDomainName": that.ruleForm.domain, // 租户域名
-                        "Account": Account, // 账号
-                        "Password": password, // 密码
-                        "Tel": "",
-                        "AllowLogin": 1,
-                        "AllowOrder": 1,
-                        "Status": 1
+                axios.get(GETKEY).then(
+                    async (res) =>{
+                        const publicKey =res.data.RsaPublicKey;
+                        let password = encrypt(that.ruleForm.password,publicKey)
+                        let data = {
+                            Key:res.data.Key,
+                            "TenantInfo": {
+                                "ID": "",
+                                "TenantName": that.ruleForm.companyName, // 租户名
+                                "Email": "",
+                                "Tel": "",
+                                "TenantSite": "",
+                                "Trade": "",
+                                "Address": "",
+                                "LicenseNo": "",
+                                "RegistrationNo": "",
+                                "Description": "",
+                                "Status": 1
+                            },
+                            "TenantUserProfiles": {
+                                "ID": "",
+                                "FullName": that.ruleForm.username, // 用户名
+                                "Photo": "",
+                                "TenantDomainName": that.ruleForm.domain, // 租户域名
+                                "Account": Account, // 账号
+                                "Password": password, // 密码
+                                "Tel": "",
+                                "AllowLogin": 1,
+                                "AllowOrder": 1,
+                                "Status": 1
+                            }
+                        };
+
+                       let registerUser = await newUser(data);  // 调用注册接口
+                        if (registerUser.Status == 1) {  // Code
+
+                            that.$message({
+                                message: "注册成功，将返回登录页面",
+                                type: 'success'
+                            });
+                            that.blankLoginIn();
+                        }
+                        if (registerUser.Status == 0) {
+                            $(".userDis4").show();
+                            $(".userDis1").hide();
+
+                        }
                     }
-                };
-                let registerUser = await newUser(data);  // 调用注册接口
-                if (registerUser.Status == 1) {  // Code
+                ).catch(
+                    (err) =>{
 
-                    that.$message({
-                        message: "注册成功，将返回登录页面",
-                        type: 'success'
-                    });
-                    that.blankLoginIn();
-                }
-                if (registerUser.Status == 0) {
-                    $(".userDis4").show();
-                    $(".userDis1").hide();
+                    }
+                )
 
-                }
 
 
                 // $.ajax({

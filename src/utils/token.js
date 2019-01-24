@@ -52,10 +52,10 @@ export function validateToken(token) {
 
 export function redirect(token, redirecturl) {
     if (redirecturl) {
-        const sid = redirecturl.match(/sid=(\S*)/)[1]
-        const url = ADMINPORTAL +'?'+'sid='+sid +"&token=" + token + "&rk=" + new Date().getTime()
-        window.location.href = decodeURIComponent(url)
-    } else {
+        const url = redirecturl+"&token=" + token + "&rk=" + new Date().getTime()
+        window.location.href = url
+    }
+    else {
         window.location.href = ADMINPORTAL
     }
 }

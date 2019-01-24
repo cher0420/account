@@ -46,10 +46,11 @@
     import {setCookies,removeCookies,getCookies} from "../../../utils/cookie.js";
     import axios from 'axios'
     import {redirect} from '../../../utils/token'
-    import {decrypt,encrypt} from "../../../utils/encrypt";
-    import {LOGIN} from "../../../api/api";
+    import CryptoJS from 'crypto-js'
+    import {LOGIN,GETKEY} from "../../../api/api";
     import {isIE9} from "../../../utils/browserOS";
-    import {REMEMBER} from "./constants";
+    import {REMEMBER,LOCALKEY,TOKEN} from "./constants";
+    import {encrypt} from '../../../../static/auth/rsa'
 
     export default {
         data(){
@@ -100,9 +101,13 @@
                 this.form.password = ''
                 this.rememberMe = false
             }else{
+
                 if(cookies){
-                    this.form.name = decrypt(cookies[0])
-                    this.form.password = decrypt(cookies[1])
+                    const name = CryptoJS.AES.decrypt(cookies[0],LOCALKEY)
+                    this.form.name = name.toString(CryptoJS.enc.Utf8);
+
+                    const pwd = CryptoJS.AES.decrypt(cookies[1],LOCALKEY)
+                    this.form.password = pwd.toString(CryptoJS.enc.Utf8);
                     this.rememberMe = cookies.length === 2
                 }else{
                     this.rememberMe  = false
@@ -144,32 +149,45 @@
             },
             submit(v){
                 const that =this
-                const data = {
-                    Account:v.name,
-                    Password:encrypt(v.password),
-                }
-                axios.post(LOGIN, data)
-                    .then(function (response) {
-                        if(!response.data.ErrorCodes){
-                         setCookies('token',response.data.Token,{expires:1}).then(()=>{
-                                const res = that.validate_someThing(response)
-                                if(res){
-                                    const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
-                                    const redirecturl = matchStr ? matchStr[1].replace('&type=login','').replace('&type=logout','') : null;
-                                    redirect(response.data.Token,redirecturl)
+
+                axios.get(GETKEY).then( //获取key值
+                    (res) =>{
+                        const publicKey =res.data.RsaPublicKey;
+                        const data = {
+                            Account:v.name,
+                            Key: res.data.Key,
+                            Password:encrypt(v.password,publicKey)
+                        }
+                        axios.post(LOGIN, data)
+                            .then(function (response) {
+                                if(!response.data.ErrorCodes){
+                                    const token = CryptoJS.AES.encrypt(response.data.Token, LOCALKEY).toString();
+                                    setCookies(TOKEN,token,{expires:1}).then(()=>{
+                                        const res = that.validate_someThing(response)
+                                        if(res){
+                                            const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
+                                            const redirecturl = matchStr ? matchStr[1].replace('&type=login','').replace('&type=logout','') : null;
+                                            redirect(response.data.Token,redirecturl)
+                                        }
+                                    })
+                                }else{
+                                    that.errorMsg = Math.random()
+                                    that.$nextTick(() => {
+                                        that.errorMsg = response.data.ErrorCodes[0].ErrorMessage
+                                    })
+                                    that.loadingText = '立即登录'
                                 }
                             })
-                        }else{
-                            that.errorMsg = Math.random()
-                            that.$nextTick(() => {
-                                that.errorMsg = response.data.ErrorCodes[0].ErrorMessage
-                            })
-                            that.loadingText = '立即登录'
-                        }
-                    })
-                    .catch(function (err) {
-                        removeCookies('token')
-                    });
+                            .catch(function (err) {
+                                removeCookies(TOKEN)
+                            });
+                    }
+                ).catch(
+                    (err) =>{
+                        console.log(err)
+                    }
+                )
+
             },
             register() {
                 var params = location.search;
@@ -188,8 +206,12 @@
                     return false
                 }else {
                     if(that.rememberMe){
-                        const password = encrypt(that.form.password)
-                        const name = encrypt(that.form.name)
+                        const password = CryptoJS.AES.encrypt(that.form.password, LOCALKEY).toString();
+                        const name = CryptoJS.AES.encrypt(that.form.name,LOCALKEY).toString();
+
+// Decrypt
+//                         const bytes  = CryptoJS.AES.decrypt(ciphertext, 'secret key 123');
+//                         const originalText = bytes.toString(CryptoJS.enc.Utf8);
                         const rememberStr = name+'&'+password
                         setCookies(REMEMBER,rememberStr,{expires: 365})
                     }else{

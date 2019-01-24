@@ -11,28 +11,39 @@ import 'element-ui/lib/theme-chalk/index.css';    // 默认主题
 
 import "babel-polyfill";
 import {validateToken} from './utils/token'
+import {TOKEN,LOCALKEY} from "./components/page/login/constants";
+import CryptoJS from 'crypto-js'
+import {ADMINPORTAL} from "./api/api";
 
-// Vue.use(ElementUI, { size: 'small' });
+const value = getCookies(TOKEN)
 
-const token = getCookies('token')
-if(token){
-    validateToken(token).then(
-        () => {
-            new Vue({
-                router,
-                store,
-                render: h => h(App)
-            }).$mount('#app');
-        }
-    ).catch(
-        err =>err
-    )
+const search = window.location.search
+const redirecturl = search?search.match(/redirecturl=(\S*)&type/)[1]:null
+
+if(redirecturl){
+    if(value){
+        const tokenStr = CryptoJS.AES.decrypt(value,LOCALKEY)
+        const token = tokenStr.toString(CryptoJS.enc.Utf8);
+        validateToken(token).then(
+            () => {
+                new Vue({
+                    router,
+                    store,
+                    render: h => h(App)
+                }).$mount('#app');
+            }
+        ).catch(
+            err =>err
+        )
+    }else{
+        new Vue({
+            router,
+            store,
+            render: h => h(App)
+        }).$mount('#app');
+    }
 }else{
-    new Vue({
-        router,
-        store,
-        render: h => h(App)
-    }).$mount('#app');
+    window.location.href=ADMINPORTAL
 }
 
 

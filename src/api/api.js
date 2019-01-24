@@ -1,4 +1,5 @@
-export const LOGIN = '/api/auth/ValidateLogin'
+export const LOGIN = '/api/auth/validatelogin'
+export const GETKEY = 'api/auth/getpublickey'
 export const ADMINPORTAL = '/web/adminportal'
-export const REGISTER = '/api/Auth/Register'
-export const VALIDATETOKEN = '/api/Auth/ValidateToken'
+export const REGISTER = '/api/auth/register'
+export const VALIDATETOKEN = '/api/auth/validatetoken'
