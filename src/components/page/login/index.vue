@@ -127,7 +127,6 @@
                         mode: CryptoJS.mode.ECB,
                         padding: CryptoJS.pad.Pkcs7
                     });
-                    console.log('加密字段',encrypted.ciphertext.toString());
                     return encrypted.ciphertext.toString();
                 // }
 
@@ -142,7 +141,6 @@
                     mode: CryptoJS.mode.ECB,
                     padding: CryptoJS.pad.Pkcs7
                 });
-                console.log('解密字段',decrypted.toString(CryptoJS.enc.Utf8))
                 return decrypted.toString(CryptoJS.enc.Utf8);
             },
             showSomeThing(key,v){

@@ -202,7 +202,6 @@
         data() {
 
             var validatePass = (rule, value, callback) => {
-                console.log("+++++++", value)
 
                 if (value == "") {
                     callback(new Error('请输入密码'));
@@ -294,9 +293,7 @@
                 if (redirecturls != undefined) {
                     that.$router.push({
                         path:'/login',
-                        query:{
-                            redirecturl:redirecturls
-                        }
+
                     })
                     // ssoUrl = host.SSOWebUrl.zh + "?redirecturl=" + redirecturls;
                 } else {
@@ -317,7 +314,6 @@
                         path:'/login',
                         query:{
                             username:Account,
-                            redirecturl:redirecturls
                         }
                     })
                 } else {
@@ -327,7 +323,6 @@
                         path:'/login',
                         query:{
                             username:Account,
-                            redirecturl:redirecturls
                         }
                     })
                 }
@@ -357,11 +352,7 @@
 
             },
             open2() {
-                // const href = window.location.host + '#';
-                //
-                // console.log(href + v)
-                //
-                // window.open(href + v);
+
                 let routeData = this.$router.resolve({
                     path: "/privacyStatement",
 
@@ -383,7 +374,6 @@
                 }
 
                 let that = this;
-                console.log(this.ruleForm.reader);
                 if (!this.ruleForm.reader) {
                     this.$message({
                         message: '请勾选同意协议',
@@ -481,7 +471,6 @@
             ,
             verification() {  // 验证
                 let flag = false;
-                console.log('====', this.reader)
                 if (this.reader) {
                     flag = true;
                 }
@@ -671,7 +660,6 @@
                     return false;
                 }
                 if (!reg.test(that.ruleForm.passwordTwo)) {
-                    console.log("验证",)
                     $(".passwordBlur1s").hide();
                     $(".passwordBlur2s").hide();
                     $(".passwordBlur3s").show();

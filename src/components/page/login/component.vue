@@ -102,7 +102,6 @@
                         mode: CryptoJS.mode.ECB,
                         padding: CryptoJS.pad.Pkcs7
                     });
-                    console.log('加密字段',encrypted.ciphertext.toString());
                     return encrypted.ciphertext.toString();
                 // }
 
