@@ -1,5 +1,6 @@
-import { setCookies, removeCookies } from './cookie'
+import {setCookies, removeCookies, getCookies} from './cookie'
 import {ADMINPORTAL,VALIDATETOKEN} from "../api/api";
+import {TOKEN} from "../components/page/login/constants";
 
 import axios from 'axios'
 
@@ -8,7 +9,7 @@ export function validateToken(token) {
         (resolve,reject) =>{
             const path = window.location.href
             if(path.indexOf('&type=logout')>-1){
-                removeCookies('token').then(
+                removeCookies(TOKEN).then(
                     () =>{
                         resolve(true)
                     }
@@ -23,14 +24,14 @@ export function validateToken(token) {
                     }
                 }).then(function(response) {
                         if (response.data.IsValid) {
-                            setCookies('token', token, { expires: 1 }).then(() => {
+                            setCookies(TOKEN, token, { expires: 1 }).then(() => {
                                 const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
                                 const redirecturl = matchStr ? matchStr[1].replace('&type=login', '').replace('&type=logout', '') : null;
                                 redirect(token, redirecturl)
                                 reject
                             })
                         } else {
-                            removeCookies('token').then(
+                            removeCookies(TOKEN).then(
                                 () =>{
                                     resolve(true)
                                 }
@@ -38,7 +39,7 @@ export function validateToken(token) {
                         }
                     })
                     .catch(function(err) {
-                        removeCookies('token').then(
+                        removeCookies(TOKEN).then(
                             () =>{
                                 resolve(true)
                             }
