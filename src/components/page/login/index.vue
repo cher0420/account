@@ -1,5 +1,5 @@
 <template>
-    <div class="contrainer-box">
+    <div :class="contrainerBox">
         <div class="logo-block">
             <div></div>
         </div>
@@ -59,6 +59,7 @@
                     name:'',
                     password:''
                 },
+                contrainerBox:['contrainer-box','blurry-background'],
                 rules: {
                     name: [
                         {required: true, message: '请输用户名', trigger: 'blur'},
@@ -88,6 +89,9 @@
         */
         beforeCreate(){
             document.title = '登录'
+        },
+        mounted(){
+          this.contrainerBox =['contrainer-box','clear-background']
         },
         created(){
             if(isIE9()){
@@ -208,10 +212,6 @@
                     if(that.rememberMe){
                         const password = CryptoJS.AES.encrypt(that.form.password, LOCALKEY).toString();
                         const name = CryptoJS.AES.encrypt(that.form.name,LOCALKEY).toString();
-
-// Decrypt
-//                         const bytes  = CryptoJS.AES.decrypt(ciphertext, 'secret key 123');
-//                         const originalText = bytes.toString(CryptoJS.enc.Utf8);
                         const rememberStr = name+'&'+password
                         setCookies(REMEMBER,rememberStr,{expires: 365})
                     }else{
@@ -290,10 +290,15 @@
         from {transform: rotate(0deg);}
         to {transform: rotate(0deg);}
     }
+    .blurry-background{
+        background: url(../../../assets/loginImage/backSmall.png) no-repeat center center fixed;
+    }
+    .clear-background{
+        background: url(../../../assets/loginImage/back.png) no-repeat center center fixed;
+    }
     .contrainer-box {
         width: 100%;
         height: 100%;
-        background: url(../../../assets/loginImage/back.png) no-repeat center center fixed;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
