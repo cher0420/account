@@ -43,8 +43,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
               // const rk = value.rk
               // console.log(value)
               // const redirecturl = value.redirecturl
-              // // res.redirect(302, redirecturl+'&token='+token+'&rk='+rk);
-              res.redirect(302, 'http://localhost:3001/');
+              // res.redirect(302, redirecturl+'&token='+token+'&rk='+rk);
+              res.redirect(302, 'https://192.168.1.103:10003');
           });
       }
   },

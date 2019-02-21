@@ -11,22 +11,22 @@ export default new Router({
         },
         {
             path: "/login",
-            component:() => import ('../components/page/login')
+            component:() => import ('../page/login')
         },
         {
             path: "/register",
             component: resolve =>
-                require(["../components/page/register.vue"], resolve)
+                require(["../page/register.vue"], resolve)
         },
         {
             path: "/serviceProtocol",
             component: resolve =>
-                require(["../components/page/serviceAgreement.vue"], resolve)
+                require(["../page/serviceAgreement.vue"], resolve)
         },
         {
             path: "/privacyStatement",
             component: resolve =>
-                require(["../components/page/privacyStatement.vue"], resolve)
+                require(["../page/privacyStatement.vue"], resolve)
         },
         {
             path: '*',

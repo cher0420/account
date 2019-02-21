@@ -1,6 +1,6 @@
 import {setCookies, removeCookies, getCookies} from './cookie'
 import {ADMINPORTAL,VALIDATETOKEN} from "../api/api";
-import {TOKEN} from "../components/page/login/constants";
+import {TOKEN} from "../constants/constants";
 
 import axios from 'axios'
 

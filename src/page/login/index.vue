@@ -1,29 +1,27 @@
 <template>
-    <div class="contrainer-box">
+    <div :class="contrainerBox">
         <div class="logo-block">
             <div></div>
         </div>
         <div class="lump-contrainer">
             <div class="welcome">欢迎登录</div>
             <el-form :model="form" :rules="rules" ref="form" label-width="0">
-                <el-form-item class="margin-t-40 p-relative" :error="errorMsg" prop="name">
-                    <el-input type="text" name="name" id="name" placeholder="请输入用户名" v-model="form.name" @keyup.enter.native="signIn"/>
-                    <span class="for-IE-special"></span>
-                    <!--<span v-if='itemError' class="item-error el-form-item__error">用户名或密码错误</span>-->
+                <el-form-item class="margin-t-40 for-IE-special-container" :error="errorMsg" prop="name">
+                    <el-input type="text" name="name" id="name" placeholder="请输入用户名" v-model="form.name" @keyup.enter.native="signIn" @focus="hideSomeThing('name','showNameTips')" @blur="showSomeThing('name','showNameTips')" @change="hideSomeThing('name','showNameTips')"/>
+                    <span v-show="showNameTips" class="for-IE-special">请输入用户名</span>
                 </el-form-item>
-                <el-form-item class="margin-t-30 p-relative" :error="errorMsg" prop="password">
-                    <el-input :type="showPWDStatus?'text':'password'" name="password" id="password" placeholder="请输入密码" v-model="form.password" @keyup.enter.native="signIn">
+                <el-form-item class="margin-t-30 for-IE-special-container" :error="errorMsg" prop="password">
+                    <el-input :type="showPWDStatus?'text':'password'" name="password" id="password" placeholder="请输入密码" v-model="form.password" @keyup.enter.native="signIn" @focus="hideSomeThing('password','showPWDTips')" @blur="showSomeThing('password','showPWDTips')" @change="hideSomeThing('password','showNameTips')">
                         <i
                             :class="showPWDStatus?['showPWD','PWD']:['noShowPwd','PWD']"
                             slot="suffix"
                             @click="showPWD">
                         </i>
                     </el-input>
-                    <span class="for-IE-special"></span>
-                    <!--<span v-if='itemError' class="item-error el-form-item__error">用户名或密码错误</span>-->
+                    <span v-show="showPWDTips" class="for-IE-special">请输入密码</span>
                 </el-form-item>
             <div class="margin-t-30 clearfix">
-                <el-checkbox v-model="rememberMe" class="f-l" style="color: #999;" @change = 'remember'>记住密码</el-checkbox>
+                <el-checkbox v-model="rememberMe" class="f-l" style="color: #999;" >记住密码</el-checkbox>
                 <span class="f-r primary-color register" @click="register">立即注册</span>
             </div>
             <div class="margin-t-40">
@@ -45,12 +43,14 @@
 </template>
 <script>
     import FooterBar from './footer'
-    import {setCookies,removeCookies,getCookies} from "./cookie";
-    import {SECRETSTRING} from './constants'
-    import {login, newUser} from "../../../api/getdata";
+    import {setCookies,removeCookies,getCookies} from "../../utils/cookie.js";
     import axios from 'axios'
+    import {redirect} from '../../utils/token'
     import CryptoJS from 'crypto-js'
-    import URL from '../../../api/host'
+    import {LOGIN,GETKEY} from "../../api/api";
+    import {isIE9} from "../../utils/browserOS";
+    import {REMEMBER,LOCALKEY,TOKEN} from "../../constants/constants";
+    import {encrypt} from '../../../static/auth/rsa'
 
     export default {
         data(){
@@ -59,6 +59,7 @@
                     name:'',
                     password:''
                 },
+                contrainerBox:'fuzzy-contrainer-box',
                 rules: {
                     name: [
                         {required: true, message: '请输用户名', trigger: 'blur'},
@@ -69,6 +70,8 @@
                         }
                     ]
                 },
+                showPWDTips:false,
+                showNameTips:false,
                 rememberMe:false,
                 loadingText:'立即登录',
                 disabled: false,
@@ -87,38 +90,49 @@
         beforeCreate(){
             document.title = '登录'
         },
-        methods:{
-            /**
-             * @return ciphertext
-             */
-            encrypt(message){
-                // Encrypt
-                // const ciphertext = CryptoJS.AES.encrypt(message, SECRETSTRING).toString();
-                // console.log('加密字段',ciphertext);
-                // return ciphertext
-                // export var des = (message) => {
-                    var keyHex = CryptoJS.enc.Utf8.parse('ANEG124*+$@223U34SG]34#0394XP0455@@##');
-                    var encrypted = CryptoJS.DES.encrypt(message, keyHex, {
-                        mode: CryptoJS.mode.ECB,
-                        padding: CryptoJS.pad.Pkcs7
-                    });
-                    console.log('加密字段',encrypted.ciphertext.toString());
-                    return encrypted.ciphertext.toString();
-                // }
+        created(){
+            if(isIE9()){
+                this.showPWDTips = true;this.showNameTips = true
+            }else{
+                this.showPWDTips = false;this.showNameTips = false
+            }
+            const cookies = getCookies(REMEMBER)?getCookies(REMEMBER).split('&'):''
+            if(this.$route.query.username){
+                this.form.name = this.$route.query.username
+                this.form.password = ''
+                this.rememberMe = false
+            }else{
 
+                if(cookies){
+                    const name = CryptoJS.AES.decrypt(cookies[0],LOCALKEY)
+                    this.form.name = name.toString(CryptoJS.enc.Utf8);
+
+                    const pwd = CryptoJS.AES.decrypt(cookies[1],LOCALKEY)
+                    this.form.password = pwd.toString(CryptoJS.enc.Utf8);
+                    this.rememberMe = cookies.length === 2
+                }else{
+                    this.rememberMe  = false
+                }
+            }
+        },
+        // mounted(){
+        //     console.log('login组件渲染完成了');
+        //     setTimeout(
+        //         () => {
+        //             this.contrainerBox='clear-contrainer-box'
+        //         } ,2000
+        //     )
+        // },
+        methods:{
+            showSomeThing(key,v){
+                if(isIE9()){
+                    this[v] = !this.form[key];
+                }
             },
-            /**
-             * @return string
-             */
-            decrypt(ciphertext){
-                var keyHex = CryptoJS.enc.Utf8.parse('ANEG124*+$@223U34SG]34#0394XP0455@@##');
-                var decrypted = CryptoJS.DES.decrypt(
-                    ciphertext,keyHex, {
-                    mode: CryptoJS.mode.ECB,
-                    padding: CryptoJS.pad.Pkcs7
-                });
-                console.log('解密字段',decrypted.toString(CryptoJS.enc.Utf8))
-                return decrypted.toString(CryptoJS.enc.Utf8);
+            hideSomeThing(key,v){
+                if(isIE9()){
+                    this[v] = false
+                }
             },
             showPWD(){
                 this.showPWDStatus = !this.showPWDStatus
@@ -130,13 +144,6 @@
                 var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
                 var r = window.location.search.substr(1).match(reg);
                 if (r != null) return unescape(r[2]); return null;
-            },
-            /**
-             *
-             */
-            remember(v){
-                // const str = this.encrypt(`${this.form.name}&${this.form.password}`)
-                // const password = this.decrypt(str)
             },
             signIn(){
                 const that = this
@@ -151,58 +158,60 @@
             },
             submit(v){
                 const that =this
-                const data = {
-                    Account:v.name,
-                    Password:v.password.length>=32?v.password:md5(v.password),
-                }
-                axios.post(URL.SSOServerApi+'/api/Tenant/ValidateLogin', data)
-                    .then(function (response) {
-                        if(!response.data.ErrorCodes){
 
-                         setCookies('token',response.data.Token,{expires:1}).then(()=>{
-                                const res = that.validate_someThing(response)
-                                if(res){
-                                    const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
-                                    const redirecturl = matchStr ? matchStr[1].replace('&type=login','').replace('&type=logout','') : null;
-                                    that.redirect(response.data.Token,redirecturl)
+                axios.get(GETKEY).then( //获取key值
+                    (res) =>{
+                        const publicKey =res.data.RsaPublicKey;
+                        const data = {
+                            Account:v.name,
+                            Key: res.data.Key,
+                            Password:encrypt(v.password,publicKey)
+                        }
+                        axios.post(LOGIN, data)
+                            .then(function (response) {
+                                if(!response.data.ErrorCodes){
+                                    const token = CryptoJS.AES.encrypt(response.data.Token, LOCALKEY).toString();
+                                    setCookies(TOKEN,token,{expires:1}).then(()=>{
+                                        const res = that.validate_someThing(response)
+                                        if(res){
+                                            const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
+                                            const redirecturl = matchStr ? matchStr[1].replace('&type=login','').replace('&type=logout','') : null;
+                                            redirect(response.data.Token,redirecturl)
+                                        }
+                                    })
+                                }else{
+                                    that.errorMsg = Math.random()
+                                    that.$nextTick(() => {
+                                        that.errorMsg = response.data.ErrorCodes[0].ErrorMessage
+                                    })
+                                    that.loadingText = '立即登录'
                                 }
                             })
-                        }
-                    })
-                    .catch(function (err) {
-                        removeCookies('token')
-                    //    that.validate_someThing(err)
-                    });
+                            .catch(function (err) {
+                                removeCookies(TOKEN)
+                                that.loadingText = '立即登录'
+                            });
+                    }
+                ).catch(
+                    (err) =>{
+                        that.$message(
+                    {
+                        message : '登录失败，请稍后重试',
+                        type:'error',
+                        duration:2000
+                    }
+                )
+                        that.loadingText = '立即登录'
+                    }
+                )
+
             },
             register() {
                 this.$router.push({
-                    path: '/register'
+                    path: '/register',
                 })
-                var params = location.search;
-                // location.href = "https://register.hightalk.online" + params;
             },
-            validateToken(token){
-                const that = this
-                const data ={
-                    Token:token
-                }
-                axios.post(URL.SSOServerApi+'/api/Tenant/ValidateToken', data)
-                    .then(function (response) {
-                        if(response.data.IsValid){
-                            setCookies('token',token,{expires:1}).then(()=>{
 
-                                    const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
-                                    const redirecturl = matchStr ? matchStr[1].replace('&type=login','').replace('&type=logout','') : null;
-                                    that.redirect(token,redirecturl)
-                            })
-                        }else{
-                            removeCookies('token')
-                        }
-                    })
-                    .catch(function (err) {
-                       removeCookies('token')
-                    });
-            },
             validate_someThing(v){
                 const that = this
                 if(v.data&&v.data.ErrorCodes){
@@ -211,25 +220,17 @@
                     return false
                 }else {
                     if(that.rememberMe){
-                        const password = that.form.password.length>=32?that.form.password:md5(that.form.password)
-                        const rememberStr = that.form.name+'&'+password
-                        setCookies('remember',rememberStr,{expires: 365})
+                        const password = CryptoJS.AES.encrypt(that.form.password, LOCALKEY).toString();
+                        const name = CryptoJS.AES.encrypt(that.form.name,LOCALKEY).toString();
+                        const rememberStr = name+'&'+password
+                        setCookies(REMEMBER,rememberStr,{expires: 365})
                     }else{
-                        removeCookies('remember')
+                        removeCookies(REMEMBER)
                     }
                     return true
                 }
             },
-            redirect(token,redirecturl){
-                if(redirecturl){
-                    const url = redirecturl + "&token=" + token + "&rk=" + new Date().getTime()
-                    window.location.href = decodeURIComponent(url)
-                }else{
-                   const host = window.location.host.indexOf('test')>-1?'https://portal-test.hightalk.ai/':'https://portal.hightalk.online/'
-                    const url = host
-                    window.location.href = decodeURIComponent(url)
-                }
-            }
+
         }
     }
 </script>
@@ -260,6 +261,20 @@
     .p-absolute{
         position: absolute;
     }
+    .for-IE-special-container{
+        .el-form-item__content{
+            position: relative;
+        }
+    }
+    .for-IE-special{
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-block;
+        height: 50px;
+        line-height: 50px;
+        padding-left: 25px;
+    }
 </style>
 <style lang="scss">
     //font
@@ -285,10 +300,38 @@
         from {transform: rotate(0deg);}
         to {transform: rotate(0deg);}
     }
-    .contrainer-box {
+
+    .fuzzy-contrainer-box {
         width: 100%;
         height: 100%;
-        background: url(../../../assets/loginImage/back.png) no-repeat center center fixed;
+        background: url(../../assets/loginImage/back.png) no-repeat center center fixed; ;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        font-size: 14px;
+        color:$normalColor;
+        min-width: 800px;
+        min-height: 648px;
+        position: relative;
+        input{
+            height: $inputH !important;
+            font-size: $primaryFontS !important;
+            padding:0 25px;
+        }
+        button{
+            //消除button的默认样式
+            margin: 0;
+            padding: 0;
+            border: 1px solid transparent;  //自定义边框
+            outline: none;    //消除默认点击蓝色边框效果
+        }
+
+    }
+    .clear-contrainer-box {
+        width: 100%;
+        height: 100%;
+        background: url(../../assets/loginImage/back.png) no-repeat center center fixed; ;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
@@ -441,7 +484,7 @@
     .logo-block > div {
         height: 60px;
         /*z-index: 1;*/
-        background-image: url(../../../assets/loginImage/Hightalk-Logo_36090@2x.png);
+        background-image: url(../../assets/loginImage/Hightalk-Logo_36090@2x.png);
         /*background-position: -125px -35px;*/
         background-repeat: no-repeat;
         background-size: contain;
@@ -455,10 +498,10 @@
         cursor: pointer;
     }
     .showPWD{
-        background: url("../../../assets/loginImage/show.png")center no-repeat;
+        background: url("../../assets/loginImage/show.png")center no-repeat;
     }
     .noShowPwd {
-        background: url("../../../assets/loginImage/unshow.png")center no-repeat;
+        background: url("../../assets/loginImage/unshow.png")center no-repeat;
     }
     /*.item-error{*/
         /*position: absolute;*/
