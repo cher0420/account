@@ -12,6 +12,8 @@ import {TOKEN,LOCALKEY} from "./constants/constants";
 import CryptoJS from 'crypto-js'
 import {ADMINPORTAL} from "./api/api";
 
+import './assets/loginImage/back.png'
+
 const value = getCookies(TOKEN)
 
 const search = window.location.search

@@ -1,5 +1,5 @@
 <template>
-    <div :class="contrainerBox">
+    <div class="fuzzy-contrainer-box">
         <div class="logo-block">
             <div></div>
         </div>
@@ -59,7 +59,6 @@
                     name:'',
                     password:''
                 },
-                contrainerBox:'fuzzy-contrainer-box',
                 rules: {
                     name: [
                         {required: true, message: '请输用户名', trigger: 'blur'},
@@ -115,14 +114,6 @@
                 }
             }
         },
-        // mounted(){
-        //     console.log('login组件渲染完成了');
-        //     setTimeout(
-        //         () => {
-        //             this.contrainerBox='clear-contrainer-box'
-        //         } ,2000
-        //     )
-        // },
         methods:{
             showSomeThing(key,v){
                 if(isIE9()){
