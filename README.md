@@ -27,6 +27,13 @@ import {REMEMBER,LOCALKEY,TOKEN} from "../../constants/constants";
 ```
 >###路由配置
 src/router/index.js
+>###样式
+src/style
+- 公共样式 ：src/style/index.scss
+- 修改ui框架样式：src/style/form.scss （不同组件请单独命名）
+- 私有样式请单独开发在相应page需求内
+>###公用工具js
+src/utils
 >###api处理
 api地址请统一放置在 src/api/api.js内
 >###静态文件，例如图片位置

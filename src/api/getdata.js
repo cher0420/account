@@ -1,10 +1,5 @@
-// import fetch from './fetch';
 import getRequest from "./easy-fetch";
 import {REGISTER} from "./api";
-
-
-import base from "./host";
-
 
 /**
  *  api异步请求
