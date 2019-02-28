@@ -45,8 +45,8 @@
     import FooterBar from './footer'
     import {setCookies,removeCookies,getCookies} from "../../utils/cookie.js";
     import axios from 'axios'
-    import {redirect} from '../../utils/token'
-    import CryptoJS from 'crypto-js'
+    import {redirect} from '../../utils/token';
+    import {enCry, deCry} from "../../utils/encrypt";
     import {LOGIN,GETKEY} from "../../api/api";
     import {isIE9} from "../../utils/browserOS";
     import {REMEMBER,LOCALKEY,TOKEN} from "../../constants/constants";
@@ -103,11 +103,8 @@
             }else{
 
                 if(cookies){
-                    const name = CryptoJS.AES.decrypt(cookies[0],LOCALKEY)
-                    this.form.name = name.toString(CryptoJS.enc.Utf8);
-
-                    const pwd = CryptoJS.AES.decrypt(cookies[1],LOCALKEY)
-                    this.form.password = pwd.toString(CryptoJS.enc.Utf8);
+                    this.form.name = deCry(cookies[0])
+                    this.form.password = deCry(cookies[1])
                     this.rememberMe = cookies.length === 2
                 }else{
                     this.rememberMe  = false
@@ -161,7 +158,7 @@
                         axios.post(LOGIN, data)
                             .then(function (response) {
                                 if(!response.data.ErrorCodes){
-                                    const token = CryptoJS.AES.encrypt(response.data.Token, LOCALKEY).toString();
+                                    const token = enCry(response.data.Token);
                                     setCookies(TOKEN,token,{expires:1}).then(()=>{
                                         const res = that.validate_someThing(response)
                                         if(res){
@@ -211,8 +208,8 @@
                     return false
                 }else {
                     if(that.rememberMe){
-                        const password = CryptoJS.AES.encrypt(that.form.password, LOCALKEY).toString();
-                        const name = CryptoJS.AES.encrypt(that.form.name,LOCALKEY).toString();
+                        const password = enCry(that.form.password);
+                        const name = enCry(that.form.name);
                         const rememberStr = name+'&'+password
                         setCookies(REMEMBER,rememberStr,{expires: 365})
                     }else{

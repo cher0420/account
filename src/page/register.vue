@@ -241,7 +241,6 @@
             }
         },
         created() {
-            console.log(this.$route.query)
 
         },
         mounted() {
@@ -255,7 +254,6 @@
                 initText: '请按住滑块，拖动到最右边',  //设置  初始的 显示文字
                 sucessText: '验证通过',//设置 验证通过 显示的文字
                 getSucessState: function (res) {
-                    // console.log("验证", res)
                     that.register = false;
                     that.agreement = false;
                 }
@@ -483,7 +481,6 @@
             ,
             verification() {  // 验证
                 let flag = false;
-                console.log('====', this.reader)
                 if (this.reader) {
                     flag = true;
                 }
@@ -620,7 +617,6 @@
             password() {  // 密码1 失去焦点
                 let that = this;
                 that.ruleForm.password = $.trim(that.ruleForm.password)
-                // console.log(that.ruleForm.password)
                 let regg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%\^&*()_+`\-={}:";'[\]/\\<>?,.\/ ]).{8,20}$/;
                 if (that.ruleForm.password == "") {
                     $(".passwordBlur1").hide();
@@ -673,7 +669,6 @@
                     return false;
                 }
                 if (!reg.test(that.ruleForm.passwordTwo)) {
-                    console.log("验证",)
                     $(".passwordBlur1s").hide();
                     $(".passwordBlur2s").hide();
                     $(".passwordBlur3s").show();
