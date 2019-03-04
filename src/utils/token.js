@@ -1,4 +1,5 @@
-import {setCookies, removeCookies, getCookies} from './cookie'
+import {Message} from 'element-ui'
+import {setCookies, removeCookies} from './cookie'
 import {ADMINPORTAL,VALIDATETOKEN} from "../api/api";
 import {TOKEN} from "../constants/constants";
 
@@ -28,7 +29,6 @@ export function validateToken(token) {
                                 const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
                                 const redirecturl = matchStr ? matchStr[1].replace('&type=login', '').replace('&type=logout', '') : null;
                                 redirect(token, redirecturl)
-                                reject
                             })
                         } else {
                             removeCookies(TOKEN).then(
@@ -41,6 +41,10 @@ export function validateToken(token) {
                     .catch(function(err) {
                         removeCookies(TOKEN).then(
                             () =>{
+                                Message( {
+                                    type: 'error',
+                                    message: '服务器错误，请稍后重试'
+                                } )
                                 resolve(true)
                             }
                         )

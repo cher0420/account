@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import {Loading} from 'element-ui';
 import App from './App';
 import router from './router';
 import {store} from './store/store';
@@ -11,6 +12,8 @@ import "babel-polyfill";
 import {validateToken} from './utils/token'
 import {TOKEN,LOCALKEY} from "./constants/constants";
 import {ADMINPORTAL} from "./api/api";
+
+let loadingInstance = Loading.service({ fullscreen: true });
 
 import './assets/loginImage/back.png'
 
@@ -27,17 +30,21 @@ if(redirecturl){
                 new Vue({
                     router,
                     store,
-                    render: h => h(App)
+                    render: h => h(App),
+                    mounted: () => {
+                        loadingInstance.close()
+                    }
                 }).$mount('#app');
             }
-        ).catch(
-            err =>err
         )
     }else{
         new Vue({
             router,
             store,
-            render: h => h(App)
+            render: h => h(App),
+            mounted: () => {
+                loadingInstance.close()
+            }
         }).$mount('#app');
     }
 }else{
