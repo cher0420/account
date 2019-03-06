@@ -16,6 +16,7 @@ export function validateToken(token) {
                     }
                 )
             }else{
+                console.log(token)
                 axios({
                     method: 'post',
                     url: VALIDATETOKEN,

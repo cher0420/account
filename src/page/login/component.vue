@@ -46,7 +46,7 @@
 <script>
     import FooterBar from './footer'
     import {setCookies,removeCookies,getCookies} from "./cookie";
-    import {SECRETSTRING} from '../../constants/constants'
+    import {SECRETSTRING, TOKEN} from '../../constants/constants'
     import {login, newUser} from "../../api/getdata";
     import axios from 'axios'
     import CryptoJS from 'crypto-js'
@@ -159,7 +159,7 @@
                     .then(function (response) {
                         if(!response.data.ErrorCodes){
 
-                         setCookies('token',response.data.Token,{expires:1}).then(()=>{
+                         setCookies(TOKEN,response.data.Token,{expires:1}).then(()=>{
                                 const res = that.validate_someThing(response)
                                 if(res){
                                     const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
@@ -170,7 +170,7 @@
                         }
                     })
                     .catch(function (err) {
-                        removeCookies('token')
+                        removeCookies(TOKEN)
                     //    that.validate_someThing(err)
                     });
             },
@@ -189,18 +189,18 @@
                 axios.post(URL.SSOServerApi+'/api/Tenant/ValidateToken', data)
                     .then(function (response) {
                         if(response.data.IsValid){
-                            setCookies('token',token,{expires:1}).then(()=>{
+                            setCookies(TOKEN,token,{expires:1}).then(()=>{
 
                                     const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
                                     const redirecturl = matchStr ? matchStr[1].replace('&type=login','').replace('&type=logout','') : null;
                                     that.redirect(token,redirecturl)
                             })
                         }else{
-                            removeCookies('token')
+                            removeCookies(TOKEN)
                         }
                     })
                     .catch(function (err) {
-                       removeCookies('token')
+                       removeCookies(TOKEN)
                     });
             },
             validate_someThing(v){
