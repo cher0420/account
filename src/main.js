@@ -4,7 +4,7 @@ import App from './App';
 import router from './router';
 import {store} from './store/store';
 import {getCookies} from "./utils/cookie";
-import {deCry} from "./utils/encrypt";
+import {deCry, enCry} from "./utils/encrypt";
 
 import "babel-polyfill";
 import {validateToken} from './utils/token'
@@ -22,8 +22,8 @@ const redirecturl = search?search.match(/redirecturl=(\S*)&type/)[1]:null
 
 if(redirecturl){
     if(value){
-        const token = deCry(value)
-        validateToken(token).then(
+        const tokenStr = deCry(value)
+        validateToken(tokenStr).then(
             () => {
                 new Vue({
                     router,

@@ -4,6 +4,7 @@ import {ADMINPORTAL,VALIDATETOKEN} from "../api/api";
 import {TOKEN} from "../constants/constants";
 
 import axios from 'axios'
+import {enCry} from "./encrypt";
 
 export function validateToken(token) {
     return new Promise(
@@ -16,7 +17,6 @@ export function validateToken(token) {
                     }
                 )
             }else{
-                console.log(token)
                 axios({
                     method: 'post',
                     url: VALIDATETOKEN,
@@ -26,7 +26,8 @@ export function validateToken(token) {
                     }
                 }).then(function(response) {
                         if (response.data.IsValid) {
-                            setCookies(TOKEN, token, { expires: 1 }).then(() => {
+                            const tokenStr = enCry(token)
+                            setCookies(TOKEN, tokenStr, { expires: 1 }).then(() => {
                                 const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
                                 const redirecturl = matchStr ? matchStr[1].replace('&type=login', '').replace('&type=logout', '') : null;
                                 redirect(token, redirecturl)

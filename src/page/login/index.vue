@@ -158,8 +158,8 @@
                         axios.post(LOGIN, data)
                             .then(function (response) {
                                 if(!response.data.ErrorCodes){
-                                    const token = enCry(response.data.Token);
-                                    setCookies(TOKEN,token,{expires:1}).then(()=>{
+                                    const tokenStr = enCry(response.data.Token);
+                                    setCookies(TOKEN,tokenStr,{expires:1}).then(()=>{
                                         const res = that.validate_someThing(response)
                                         if(res){
                                             const matchStr = window.location.href.match(/redirecturl=(\S*)[#]/)
