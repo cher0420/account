@@ -32,7 +32,8 @@ $side-bar-width:60px;
 $side-width:240px;
 
 $f-pri-c: #555;
-
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+@import "~element-ui/packages/theme-chalk/src/index";
 //layout
 #app{
   height:100%;

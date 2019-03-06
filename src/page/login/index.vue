@@ -49,7 +49,7 @@
     import {enCry, deCry} from "../../utils/encrypt";
     import {LOGIN,GETKEY} from "../../api/api";
     import {isIE9} from "../../utils/browserOS";
-    import {REMEMBER,LOCALKEY,TOKEN} from "../../constants/constants";
+    import {REMEMBER,TOKEN,LOCALKEY} from "../../constants/constants";
     import {encrypt} from '../../../static/auth/rsa'
 
     export default {

@@ -6,8 +6,6 @@ import {store} from './store/store';
 import {getCookies} from "./utils/cookie";
 import {deCry} from "./utils/encrypt";
 
-import 'element-ui/lib/theme-chalk/index.css';    // 默认主题
-
 import "babel-polyfill";
 import {validateToken} from './utils/token'
 import {TOKEN,LOCALKEY} from "./constants/constants";
@@ -24,7 +22,7 @@ const redirecturl = search?search.match(/redirecturl=(\S*)&type/)[1]:null
 
 if(redirecturl){
     if(value){
-        const token = deCry(value,LOCALKEY)
+        const token = deCry(value)
         validateToken(token).then(
             () => {
                 new Vue({
