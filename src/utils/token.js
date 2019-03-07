@@ -41,15 +41,7 @@ export function validateToken(token) {
                         }
                     })
                     .catch(function(err) {
-                        removeCookies(TOKEN).then(
-                            () =>{
-                                Message( {
-                                    type: 'error',
-                                    message: '服务器错误，请稍后重试'
-                                } )
-                                resolve(true)
-                            }
-                        )
+                        removeCookies(TOKEN)
                     });
             }
         }
