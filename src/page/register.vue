@@ -103,18 +103,12 @@
                     <!-- 获取焦点显示-->
                     <div class="passwordBlur2"
                          style="color: #999;padding-top: 5px;padding-bottom: 10px ;display: none">
-                        <span>密码需包含数字、字母和特殊字符 （ 8-20位,空格除外 )</span>
+                        <span>密码需包含数字、字母和特殊字符（8-20位，空格除外）</span>
                     </div>
-
-                    <!--<div class="passwordBlur3"-->
-                    <!--style="color:#f43a38;padding-top: 5px;padding-bottom: 10px ;display: none">-->
-                    <!--<span><span class="el-icon-warning"></span> <span v-text="passwordTip"></span></span>-->
-                    <!--</div>-->
-
 
                     <div class="passwordBlur3"
                          style="color:#f43a38;padding-top: 5px;padding-bottom: 10px ;display: none">
-                        <span><span class="el-icon-warning"></span> 密码需包含数字、字母和特殊字符（8-20位,空格除外 )</span>
+                        <span><span class="el-icon-warning"></span> 密码需包含数字、字母和特殊字符（8-20位，空格除外）</span>
                     </div>
                     <div class="passwordBlur4"
                          style="color:#f43a38;padding-top: 5px;padding-bottom: 10px ;display: none">
@@ -123,8 +117,7 @@
 
                     <div class="pws">
                         <el-form-item>
-                            <!--<input type="password" placeholder="确认密码" @focus='passwordFocuss()' @blur="passwords()"-->
-                            <!--maxlength="20" v-model="ruleForm.passwordTwo" >-->
+
                             <el-input type="password" placeholder="确认密码" @focus='passwordFocuss()' @blur="passwords()"
                                       maxlength="20" v-model="ruleForm.passwordTwo" autocomplete="off">
                             </el-input>
@@ -201,22 +194,10 @@
     import axios from 'axios'
     export default {
         data() {
-
             var validatePass = (rule, value, callback) => {
-
                 if (value == "") {
                     callback(new Error('请输入密码'));
-
                 }
-                // else if( !reg.test(value) ){
-                //     callback(new Error("密码需包含数字、字母和特殊字符 （ 空格除外 ）"));
-                // }
-                // else if( value.length < 8 ){
-                //     callback(new Error("密码长度不得低于8位字符"));
-                // }
-                // else {
-                //     callback();
-                // }
             };
             return {
 
@@ -237,7 +218,6 @@
                 },
 
                 slideVerify: {},
-
             }
         },
         created() {
@@ -437,46 +417,6 @@
                     }
                 )
 
-
-
-                // $.ajax({
-                //     type: "POST",
-                //     headers: {
-                //         "Content-Type": "application/json;charset=utf-8",
-                //     },
-                //     url: host.registerHost + "/api/Tenant/Register?v=" + new Date(),
-                //     data: JSON.stringify(data),
-                //     dataType: "json",
-                //     async: true,
-                //     success: function (msg) {
-                //         console.log("msg", msg);
-                //         debugger;
-                //         if (msg.Status == 1) {
-                //
-                //
-                //             that.$message({
-                //                 message: "注册成功，将返回登录页面",
-                //                 type: 'success'
-                //             });
-                //
-                //
-                //             that.blankLoginIn();
-                //
-                //         }
-                //         if (msg.Status == 0) {
-                //
-                //             $(".userDis4").show();
-                //             $(".userDis1").show();
-                //
-                //             // that.$message({
-                //             //     message: msg.ErrorCodes[0].ErrorMessage,
-                //             //     type: 'success'
-                //             // });
-                //         }
-                //     }
-                // })
-
-
             }
             ,
             verification() {  // 验证
@@ -626,6 +566,14 @@
                     $(".pw input").css("border-radius", "4px");
                     return false;
                 }
+                if (that.ruleForm.password.indexOf(' ') > -1) {
+                    $(".passwordBlur1").hide();
+                    $(".passwordBlur2").hide();
+                    $(".passwordBlur3").show();
+                    $(".pw input").css("border", "1px solid #f43a38");
+                    $(".pw input").css("border-radius", "4px");
+                    return false;
+                }
                 if (!regg.test(that.ruleForm.password)) {
                     $(".passwordBlur1").hide();
                     $(".passwordBlur2").hide();
@@ -681,6 +629,16 @@
                 if (that.ruleForm.passwordTwo.length < 8) {
                     $(".passwordBlur1s").hide();
                     $(".passwordBlur2s").hide();
+                    $(".passwordBlur3s").show();
+                    $(".passwordBlur4s").hide();
+                    $(".passwordBlur5s").hide();
+                    $(".pws input").css("border", "1px solid #f43a38");
+                    $(".pws input").css("border-radius", "4px");
+                    return false;
+                }
+                if (that.ruleForm.passwordTwo.indexOf(' ') > -1) {
+                    $(".passwordBlur1s").hide();
+                    $(".passwordBlur2s").hide();
                     $(".passwordBlur3s").hide();
                     $(".passwordBlur4s").show();
                     $(".passwordBlur5s").hide();
@@ -688,6 +646,7 @@
                     $(".pws input").css("border-radius", "4px");
                     return false;
                 }
+
                 if (that.ruleForm.passwordTwo != that.ruleForm.password) {
                     $(".passwordBlur1s").hide();
                     $(".passwordBlur2s").hide();
