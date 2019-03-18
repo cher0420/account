@@ -557,7 +557,7 @@
             password() {  // 密码1 失去焦点
                 let that = this;
                 that.ruleForm.password = $.trim(that.ruleForm.password)
-                let regg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%\^&*()_+`\-={}:";'[\]/\\<>?,.\/ ]).{8,20}$/;
+                let regg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$|%\^&*()_+`\-={}:";'[\]/\\<>?,.\/ ]).{8,20}$/;
                 if (that.ruleForm.password == "") {
                     $(".passwordBlur1").hide();
                     $(".passwordBlur2").hide();
@@ -605,7 +605,7 @@
             passwords() {
                 let that = this;
                 that.ruleForm.passwordTwo = $.trim(that.ruleForm.passwordTwo);
-                let reg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%\^&*()_+`\-={}:";'[\]/\\<>?,.\/ ]).{8,20}$/;
+                let reg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$|%\^&*()_+`\-={}:";'[\]/\\<>?,.\/ ]).{8,20}$/;
                 if (that.ruleForm.passwordTwo == "") {
                     $(".passwordBlur1s").hide();
                     $(".passwordBlur2s").hide();
